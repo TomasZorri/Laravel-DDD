@@ -1,0 +1,45 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Persistence\Eloquent\Mappers;
+
+use Src\{{context}}\{{module}}\Infrastructure\Persistence\Eloquent\Models\{{module}}Model;
+use Src\{{context}}\{{module}}\Domain\Entities\{{module}};
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Id;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Name;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Description;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Price;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Stock;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Sku;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}CategoryId;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}State;
+
+final class {{module}}Mapper
+{
+    public static function toEloquent({{module}} ${{module}}): array
+    {
+        return [
+            'id' => ${{module}}->id(),
+            'name' => ${{module}}->name()->value(),
+            'description' => ${{module}}->description()->value(),
+            'price' => ${{module}}->price()->value(),
+            'stock' => ${{module}}->stock()->value(),
+            'sku' => ${{module}}->sku()->value(),
+            'category_id' => ${{module}}->categoryId()->value(),
+            'state' => ${{module}}->state()->value(),
+        ];
+    }
+
+    public static function toDomain({{module}}Model $model): {{module}}
+    {
+        return new {{module}}(
+            $model->id,
+            new {{module}}Name($model->name),
+            new {{module}}Description($model->description),
+            new {{module}}Price($model->price),
+            new {{module}}Stock($model->stock),
+            new {{module}}Sku($model->sku),
+            new {{module}}CategoryId($model->category_id),
+            {{module}}State::from($model->state)
+        );
+    }
+}

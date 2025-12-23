@@ -1,0 +1,65 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Cache\Decorators;
+
+use Src\{{context}}\{{module}}\Domain\Contracts\{{module}}RepositoryInterface;
+use Src\{{context}}\{{module}}\Infrastructure\Cache\Contracts\CacheStoreInterface;
+use Src\{{context}}\{{module}}\Domain\Entities\{{module}};
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Id;
+
+final class Cached{{module}}Repository implements {{module}}RepositoryInterface
+{
+    private const TAG_LIST = ['{{module}}_list'];
+    private const TTL = 3600;
+
+    public function __construct(
+        private ProductRepositoryInterface $repository,
+        private CacheStoreInterface $cache
+    ) {
+    }
+
+    public function findAll(array $filters = []): array
+    {
+        // Ordenamos los filtros para que el hash sea el mismo aunque cambie el orden en la URL
+        ksort($filters);
+        $cacheKey = '{{module}}.all.' . md5(json_encode($filters));
+
+        return $this->cache->tags(self::TAG_LIST)->remember(
+            $cacheKey,
+            self::TTL,
+            fn() => $this->repository->findAll($filters)
+        );
+    }
+
+    public function findById({{module}}Id $id): ?{{module}}
+    {
+        return $this->cache->remember(
+            "{{module}}.{$id->value()}",
+            self::TTL,
+            fn() => $this->repository->findById($id)
+        );
+    }
+
+    public function save({{module}} ${{module}}): void
+    {
+        $this->repository->save(${{module}});
+        // Al guardar, invalidamos TODAS las listas filtradas
+        $this->cache->flushTags(self::TAG_LIST);
+    }
+
+    public function update({{module}} ${{module}}): void
+    {
+        $this->repository->update(${{module}});
+        // Invalidamos listas y el producto específico
+        $this->cache->flushTags(self::TAG_LIST);
+        $this->cache->forget("{{module}}.{${{module}}->id()}");
+    }
+
+    public function delete({{module}}Id $id): void
+    {
+        $this->repository->delete($id);
+        // Invalidamos listas y el producto específico
+        $this->cache->flushTags(self::TAG_LIST);
+        $this->cache->forget("{{module}}.{$id->value()}");
+    }
+}

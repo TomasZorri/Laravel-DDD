@@ -1,0 +1,73 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Docker/Dockerfile
+    container_name: ecommerce-app
+    image: laravel-docker-app
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+    volumes:
+      - ./Backend:/var/www
+    working_dir: /var/www
+  db:
+    container_name: ecommerce-db
+    environment:
+      MYSQL_DATABASE: laravel-db
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: laravel_user
+    image: mysql:8.0
+    networks:
+      - ecommerce-network
+    ports:
+      - 3306:3306
+    restart: unless-stopped
+
+  rabbitmq:
+    container_name: ecommerce-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: guest
+    image: rabbitmq:3-management
+    networks:
+      - ecommerce-network
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  redis:
+    container_name: ecommerce-redis
+    image: redis:alpine
+    networks:
+      - ecommerce-network
+    ports:
+      - 6379:6379
+
+  adminer:
+    image: adminer
+    container_name: ecommerce-adminer
+    ports:
+      - 8080:8080
+    networks:
+      - ecommerce-network
+
+  web:
+    container_name: ecommerce-nginx
+    depends_on:
+      - app
+    image: nginx:alpine
+    networks:
+      - ecommerce-network
+    ports:
+      - 80:80
+    restart: unless-stopped
+    volumes:
+      - ./Backend:/var/www
+      - ./Docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+networks:
+  ecommerce-network:
+    driver: bridge

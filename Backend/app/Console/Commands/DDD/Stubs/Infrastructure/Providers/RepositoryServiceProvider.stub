@@ -1,0 +1,40 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+use Src\{{context}}\{{module}}\Domain\Contracts\{{module}}RepositoryInterface;
+
+use Src\{{context}}\{{module}}\Infrastructure\Persistence\Eloquent\Repositories\{{module}}Repository;
+use Src\{{context}}\{{module}}\Infrastructure\Cache\Decorators\Cached{{module}}Repository;
+use Src\{{context}}\{{module}}\Infrastructure\Cache\Contracts\CacheStoreInterface;
+use Src\{{context}}\{{module}}\Infrastructure\Cache\Redis\RedisCacheStore;
+
+use Src\{{context}}\{{module}}\Domain\Contracts\EventBusInterface;
+use Src\{{context}}\{{module}}\Infrastructure\Bus\LaravelEventBus;
+
+final class RepositoryServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        $this->app->bind(EventBusInterface::class, LaravelEventBus::class);
+
+        // 1. Registramos la implementación de la caché como singleton
+        // (Singleton es mejor para caché para reutilizar la conexión a Redis)
+        $this->app->singleton(CacheStoreInterface::class, RedisCacheStore::class);
+
+        // 2. Registramos el Repositorio Decorado
+        $this->app->bind({{module}}RepositoryInterface::class, function ($app) {
+
+            // Usamos $app->make para que Laravel construya el repo real
+            $eloquentRepository = $app->make({{module}}Repository::class);
+
+            // Retornamos el decorador
+            return new Cached{{module}}Repository(
+                $eloquentRepository,
+                $app->make(CacheStoreInterface::class)
+            );
+        });
+    }
+}

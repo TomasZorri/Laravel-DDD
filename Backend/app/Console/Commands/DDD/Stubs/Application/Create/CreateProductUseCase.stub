@@ -1,0 +1,46 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Application\Create;
+
+use Src\{{context}}\{{module}}\Domain\Contracts\{{module}}RepositoryInterface;
+use Src\{{context}}\{{module}}\Domain\Entities\{{module}};
+use Src\{{context}}\{{module}}\Domain\Contracts\EventBusInterface;
+
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Name;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Description;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Price;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Stock;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Sku;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}CategoryId;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}State;
+
+
+final class Create{{module}}UseCase
+{
+    public function __construct(
+        private {{module}}RepositoryInterface $repository,
+        private EventBusInterface $eventBus
+    ) {
+    }
+
+    public function execute(Create{{module}}Command $command): {{module}}
+    {
+        ${{module}} = {{module}}::create(
+            new {{module}}Name($command->name),
+            new {{module}}Description($command->description),
+            new {{module}}Price($command->price),
+            new {{module}}Stock($command->stock),
+            new {{module}}Sku($command->sku),
+            new {{module}}CategoryId($command->categoryId),
+            {{module}}State::from($command->state)
+        );
+
+        $this->repository->save(${{module}});
+
+        // Disparamos el evento de dominio
+        $this->eventBus->publish(${{module}}->pullDomainEvents());
+
+
+        return ${{module}};
+    }
+}

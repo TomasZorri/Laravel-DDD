@@ -1,0 +1,28 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Http\Controllers;
+
+use Illuminate\Http\JsonResponse;
+use Src\{{context}}\{{module}}\Application\Get{{module}}UseCase;
+use Src\{{context}}\{{module}}\Infrastructure\Persistence\Eloquent\Mappers\{{module}}Mapper;
+
+final class Get{{module}}GetController
+{
+    public function __construct(private Get{{module}}UseCase $useCase)
+    {
+    }
+
+    public function __invoke(int $id): JsonResponse
+    {
+        ${{module}} = $this->useCase->execute($id);
+
+        if (!${{module}}) {
+            return new JsonResponse(['error' => '{{module}} not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        return new JsonResponse(
+            {{module}}Mapper::toEloquent(${{module}}),
+            JsonResponse::HTTP_OK
+        );
+    }
+}

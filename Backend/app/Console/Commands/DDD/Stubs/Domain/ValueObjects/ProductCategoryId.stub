@@ -1,0 +1,15 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Domain\ValueObjects;
+
+final readonly class {{module}}CategoryId
+{
+    public function __construct(private int $value)
+    {
+    }
+
+    public function value(): int
+    {
+        return $this->value;
+    }
+}

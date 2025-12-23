@@ -1,0 +1,14 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Domain\Events;
+
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Id;
+
+final readonly class {{module}}Deleted
+{
+    public function __construct(
+        public {{module}}Id $id,
+        public \DateTimeImmutable $occurredOn = new \DateTimeImmutable()
+    ) {
+    }
+}

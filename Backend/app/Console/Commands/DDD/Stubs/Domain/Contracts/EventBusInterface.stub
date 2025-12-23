@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Src\{{context}}\{{module}}\Domain\Contracts;
+
+interface EventBusInterface
+{
+    /**
+     * Publica una lista de eventos de dominio para que sean procesados
+     * por sus respectivos suscriptores (listeners).
+     * * @param object[] $events
+     */
+    public function publish(array $events): void;
+}

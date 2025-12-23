@@ -1,0 +1,21 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Http\Controllers;
+
+use Illuminate\Http\JsonResponse;
+use Src\{{context}}\{{module}}\Application\Delete{{module}}UseCase;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Id;
+
+final class Delete{{module}}DeleteController
+{
+    public function __construct(private Delete{{module}}UseCase $useCase)
+    {
+    }
+
+    public function __invoke(int $id): JsonResponse
+    {
+        $this->useCase->execute({{module}}Id::from($id));
+
+        return new JsonResponse(['message' => '{{module}} eliminado correctamente'], JsonResponse::HTTP_OK);
+    }
+}

@@ -1,0 +1,36 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Http\Controllers;
+
+use Illuminate\Http\JsonResponse;
+use Src\{{context}}\{{module}}\Application\Update\Update{{module}}UseCase;
+use Src\{{context}}\{{module}}\Application\Update\Update{{module}}Command;
+use Src\{{context}}\{{module}}\Infrastructure\Http\Requests\Update{{module}}Request;
+
+final class Update{{module}}PutController
+{
+    public function __construct(private Update{{module}}UseCase $useCase)
+    {
+    }
+
+    public function __invoke(int $id, Update{{module}}Request $request): JsonResponse
+    {
+
+        // 1. Creamos el Command
+        $command = new Update{{module}}Command(
+            $id,
+            name: $request->input('name'),
+            description: $request->input('description'),
+            price: $request->has('price') ? (float) $request->input('price') : null,
+            stock: $request->has('stock') ? (int) $request->input('stock') : null,
+            sku: $request->input('sku'),
+            categoryId: $request->has('category_id') ? (int) $request->input('category_id') : null,
+            state: $request->input('state')
+        );
+
+        // 2. Ejecutamos el caso de uso pasando solo el Command
+        $this->useCase->execute($command);
+
+        return new JsonResponse(['message' => '{{module}} actualizado correctamente'], JsonResponse::HTTP_OK);
+    }
+}

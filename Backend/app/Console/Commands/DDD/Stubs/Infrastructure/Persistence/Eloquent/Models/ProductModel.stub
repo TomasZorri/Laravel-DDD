@@ -1,0 +1,21 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Persistence\Eloquent\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+final class {{module}}Model extends Model
+{
+    protected $table = '{{module}}';
+
+    protected $fillable = [
+        'id',
+        'nombre',
+        'descripcion',
+        'precio',
+        'stock',
+        'sku',
+        'categoria_id',
+        'estado',
+    ];
+}

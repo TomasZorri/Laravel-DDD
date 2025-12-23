@@ -1,0 +1,24 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Http\Controllers;
+
+use Illuminate\Http\JsonResponse;
+use Src\{{context}}\{{module}}\Application\GetAll{{module}}UseCase;
+use Src\{{context}}\{{module}}\Infrastructure\Persistence\Eloquent\Mappers\{{module}}Mapper;
+
+final class GetAll{{module}}GetController
+{
+    public function __construct(private GetAll{{module}}UseCase $useCase)
+    {
+    }
+
+    public function __invoke(): JsonResponse
+    {
+        ${{module}}s = $this->useCase->execute();
+
+        return new JsonResponse(
+            array_map(fn(${{module}}) => {{module}}Mapper::toEloquent(${{module}}), ${{module}}s),
+            JsonResponse::HTTP_OK
+        );
+    }
+}

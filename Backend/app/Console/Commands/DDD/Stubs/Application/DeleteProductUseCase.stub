@@ -1,0 +1,34 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Application;
+
+use Src\{{context}}\{{module}}\Domain\Contracts\{{module}}RepositoryInterface;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Id;
+use Src\{{context}}\{{module}}\Domain\Contracts\EventBusInterface;
+use Src\{{context}}\{{module}}\Domain\Events\{{module}}Deleted;
+
+final class Delete{{module}}UseCase
+{
+    public function __construct(
+        private {{module}}RepositoryInterface $repository,
+        private EventBusInterface $eventBus
+    ) {
+    }
+
+    public function execute({{module}}Id $id): void
+    {
+        // 1. Verificar existencia
+        ${{module}} = $this->repository->findById($id);
+
+        if (!${{module}}) {
+            throw new \Exception('{{module}} not found');
+        }
+
+        // 2. Ejecutar borrado en repositorio
+        $this->repository->delete($id);
+
+        // 3. Publicar evento de eliminación
+        // Como el objeto ya no existe en DB, enviamos solo el ID
+        $this->eventBus->publish([new {{module}}Deleted($id)]);
+    }
+}

@@ -1,0 +1,27 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Cache\Listeners;
+
+use Src\{{context}}\{{module}}\Domain\Events\{{module}}Created;
+use Src\{{context}}\{{module}}\Domain\Events\{{module}}Updated;
+use Src\{{context}}\{{module}}\Domain\Events\{{module}}Deleted;
+use Src\{{context}}\{{module}}\Infrastructure\Cache\Contracts\CacheStoreInterface;
+use Illuminate\Contracts\Queue\ShouldQueue; // Verificar si es necesario, por si anda lento por la conección.
+
+final class {{module}}CacheInvalidator implements ShouldQueue
+{
+    public function __construct(
+        private CacheStoreInterface $cache
+    ) {
+    }
+
+    public function handle({{module}}Created|{{module}}Updated|{{module}}Deleted $event): void
+    {
+        // Borramos todas las listas filtradas
+        $this->cache->flushTags(['{{module}}_list']);
+
+        // Solo verifica que en tu evento {{module}}Deleted el ID sea accesible así:
+        $id = ($event instanceof {{module}}Deleted) ? $event->id : $event->{{module}}->id();
+        $this->cache->forget("{{module}}.{$id}");
+    }
+}

@@ -1,0 +1,34 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Providers;
+
+//use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+
+use Src\{{context}}\{{module}}\Domain\Events\{{module}}Created;
+use Src\{{context}}\{{module}}\Domain\Events\{{module}}Updated;
+use Src\{{context}}\{{module}}\Domain\Events\{{module}}Deleted;
+use Src\{{context}}\{{module}}\Infrastructure\Cache\Listeners\{{module}}CacheInvalidator;
+
+final class EventServiceProvider extends ServiceProvider
+{
+    /**
+     * El mapa de eventos y suscriptores de la aplicación.
+     */
+    protected $listen = [
+        {{module}}Created::class => [
+            {{module}}CacheInvalidator::class,
+        ],
+        {{module}}Updated::class => [
+            {{module}}CacheInvalidator::class,
+        ],
+        {{module}}Deleted::class => [
+            {{module}}CacheInvalidator::class,
+        ],
+    ];
+
+    public function boot(): void
+    {
+        parent::boot();
+    }
+}

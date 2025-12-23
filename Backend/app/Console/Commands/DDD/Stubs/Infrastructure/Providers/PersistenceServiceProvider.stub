@@ -1,0 +1,28 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Src\{{context}}\{{module}}\Domain\Contracts\{{module}}RepositoryInterface;
+use Src\{{context}}\{{module}}\Infrastructure\Persistence\Eloquent\Repositories\{{module}}Repository;
+
+use Src\{{context}}\{{module}}\Domain\Contracts\EventBusInterface;
+use Src\{{context}}\{{module}}\Infrastructure\Bus\LaravelEventBus;
+
+final class PersistenceServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        // Binding del Repositorio
+        $this->app->bind(
+            {{module}}RepositoryInterface::class,
+            {{module}}Repository::class
+        );
+
+        // Binding del Event Bus (Implementación local/síncrona para empezar)
+        $this->app->bind(
+            EventBusInterface::class,
+            LaravelEventBus::class
+        );
+    }
+}

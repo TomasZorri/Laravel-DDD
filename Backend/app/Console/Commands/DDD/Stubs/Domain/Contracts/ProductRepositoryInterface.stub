@@ -1,0 +1,15 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Domain\Contracts;
+
+use Src\{{context}}\{{module}}\Domain\Entities\{{module}};
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Id;
+
+interface {{module}}RepositoryInterface
+{
+    public function save({{module}} ${{module}}): void;
+    public function findById({{module}}Id $id): ?{{module}};
+    public function findAll(array $filters = []): array;
+    public function update({{module}} ${{module}}): void;
+    public function delete({{module}}Id $id): void;
+}

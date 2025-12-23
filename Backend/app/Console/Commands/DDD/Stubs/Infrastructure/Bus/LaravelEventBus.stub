@@ -1,0 +1,19 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Bus;
+
+use Src\{{context}}\{{module}}\Domain\Contracts\EventBusInterface;
+use Illuminate\Support\Facades\Event;
+
+final class LaravelEventBus implements EventBusInterface
+{
+    public function publish(array $events): void
+    {
+        foreach ($events as $event) {
+            // Usamos el helper de Laravel para disparar el evento
+            Event::dispatch($event);
+        }
+    }
+}

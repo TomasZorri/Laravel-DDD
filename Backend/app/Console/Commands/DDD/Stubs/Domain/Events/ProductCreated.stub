@@ -1,0 +1,14 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Domain\Events;
+
+use Src\{{context}}\{{module}}\Domain\Entities\{{module}};
+
+final readonly class {{module}}Created
+{
+    public function __construct(
+        public {{module}} ${{module}},
+        public \DateTimeImmutable $occurredOn = new \DateTimeImmutable()
+    ) {
+    }
+}

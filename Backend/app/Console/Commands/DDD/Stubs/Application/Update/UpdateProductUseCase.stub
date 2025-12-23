@@ -1,0 +1,49 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Application\Update;
+
+use Src\{{context}}\{{module}}\Domain\Contracts\EventBusInterface;
+use Src\{{context}}\{{module}}\Domain\Contracts\{{module}}RepositoryInterface;
+
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Name;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Description;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Price;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Stock;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Sku;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}CategoryId;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}State;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Id;
+
+final class Update{{module}}UseCase
+{
+    public function __construct(private {{module}}RepositoryInterface $repository, private EventBusInterface $eventBus)
+    {
+    }
+
+    public function execute(Update{{module}}Command $command): void
+    {
+        // 1. Buscamos el {{module}}, con el value object (El repositorio debería aceptar el VO)
+        ${{module}} = $this->repository->findById({{module}}Id::from($command->id));
+
+        if (!${{module}}) {
+            throw new \Exception('{{module}} not found');
+        }
+
+        // 2. Actualizamos la entidad
+        ${{module}}->update(
+            $command->name ? new {{module}}Name($command->name) : ${{module}}->name(),
+            $command->description !== null ? new {{module}}Description($command->description) : ${{module}}->description(),
+            $command->price !== null ? new {{module}}Price($command->price) : ${{module}}->price(),
+            $command->stock !== null ? new {{module}}Stock($command->stock) : ${{module}}->stock(),
+            $command->sku ? new {{module}}Sku($command->sku) : ${{module}}->sku(),
+            $command->categoryId ? new {{module}}CategoryId($command->categoryId) : ${{module}}->categoryId(),
+            $command->state ? {{module}}State::from($command->state) : ${{module}}->state(),
+        );
+
+        // 3. Persistir en DB
+        $this->repository->update(${{module}});
+
+        // 4. DESPACHAR: Sacamos los eventos de la entidad y los publicamos
+        $this->eventBus->publish(${{module}}->pullDomainEvents());
+    }
+}

@@ -1,0 +1,16 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use Src\{{context}}\{{module}}\Infrastructure\Http\Controllers\Create{{module}}PostController;
+use Src\{{context}}\{{module}}\Infrastructure\Http\Controllers\Get{{module}}GetController;
+use Src\{{context}}\{{module}}\Infrastructure\Http\Controllers\Update{{module}}PutController;
+use Src\{{context}}\{{module}}\Infrastructure\Http\Controllers\Delete{{module}}DeleteController;
+use Src\{{context}}\{{module}}\Infrastructure\Http\Controllers\GetAll{{module}}GetController;
+
+Route::prefix('{{module}}')->group(function () {
+    Route::post('/', Create{{module}}PostController::class);
+    Route::get('/', GetAll{{module}}GetController::class);
+    Route::get('/{id}', Get{{module}}GetController::class);
+    Route::put('/{id}', Update{{module}}PutController::class);
+    Route::delete('/{id}', Delete{{module}}DeleteController::class);
+});

@@ -1,0 +1,143 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Domain\Entities;
+
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Name;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Description;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Price;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Stock;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Sku;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}CategoryId;
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}State;
+
+use Src\{{context}}\{{module}}\Domain\Events\{{module}}Updated;
+use Src\{{context}}\{{module}}\Domain\Events\{{module}}Created;
+
+final class {{module}}
+{
+    private array $domainEvents = [];
+
+    public function __construct(
+        private ?int $id,
+        private {{module}}Name $name,
+        private {{module}}Description $description,
+        private {{module}}Price $price,
+        private {{module}}Stock $stock,
+        private {{module}}Sku $sku,
+        private {{module}}CategoryId $categoryId,
+        private {{module}}State $state
+    ) {
+    }
+
+    // Creaciones
+    public static function create(
+        {{module}}Name $name,
+        {{module}}Description $description,
+        {{module}}Price $price,
+        {{module}}Stock $stock,
+        {{module}}Sku $sku,
+        {{module}}CategoryId $categoryId,
+        {{module}}State $state
+    ): self {
+        ${{module}} = new self(
+            null,
+            $name,
+            $description,
+            $price,
+            $stock,
+            $sku,
+            $categoryId,
+            $state
+        );
+
+        // Registramos el evento dentro de la entidad
+        ${{module}}->record(new {{module}}Created(${{module}}));
+
+        return ${{module}};
+    }
+
+    // ACTUALIZACIONES
+    public function update(
+        {{module}}Name $name,
+        {{module}}Description $description,
+        {{module}}Price $price,
+        {{module}}Stock $stock,
+        {{module}}Sku $sku,
+        {{module}}CategoryId $categoryId,
+        {{module}}State $state
+    ): void {
+        $this->name = $name;
+        $this->description = $description;
+        $this->price = $price;
+        $this->stock = $stock;
+        $this->sku = $sku;
+        $this->categoryId = $categoryId;
+        $this->state = $state;
+
+        // Aquí podrías registrar un evento de "Actualizado"
+        $this->record(new {{module}}Updated($this));
+    }
+
+
+    // =======================
+    // Domain Events
+    // =======================
+
+    protected function record(object $event): void
+    {
+        $this->domainEvents[] = $event;
+    }
+
+    public function pullDomainEvents(): array
+    {
+        $events = $this->domainEvents;
+        $this->domainEvents = [];
+        return $events;
+    }
+
+
+
+
+    // =======================
+    // Getters
+    // =======================
+
+    public function id(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function name(): {{module}}Name
+    {
+        return $this->name;
+    }
+    public function description(): {{module}}Description
+    {
+        return $this->description;
+    }
+    public function price(): {{module}}Price
+    {
+        return $this->price;
+    }
+    public function stock(): {{module}}Stock
+    {
+        return $this->stock;
+    }
+    public function sku(): {{module}}Sku
+    {
+        return $this->sku;
+    }
+    public function categoryId(): {{module}}CategoryId
+    {
+        return $this->categoryId;
+    }
+    public function state(): {{module}}State
+    {
+        return $this->state;
+    }
+}

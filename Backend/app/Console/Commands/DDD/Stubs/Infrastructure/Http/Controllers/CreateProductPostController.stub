@@ -1,0 +1,34 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use Src\{{context}}\{{module}}\Application\Create\Create{{module}}UseCase;
+use Src\{{context}}\{{module}}\Application\Create\Create{{module}}Command;
+use Src\{{context}}\{{module}}\Infrastructure\Http\Requests\Create{{module}}Request;
+
+final class Create{{module}}PostController extends Controller
+{
+
+    public function __construct(private Create{{module}}UseCase $useCase)
+    {
+    }
+
+    public function __invoke(Create{{module}}Request $request)
+    {
+        //dd($request->all());
+        $command = new Create{{module}}Command(
+            name: $request->name,
+            description: $request->description,
+            price: $request->price,
+            stock: $request->stock,
+            sku: $request->sku,
+            categoryId: $request->category_id,
+            state: $request->state
+        );
+
+        ${{module}} = $this->useCase->execute($command);
+
+        return response()->json(['id' => ${{module}}->id()], 201);
+    }
+}

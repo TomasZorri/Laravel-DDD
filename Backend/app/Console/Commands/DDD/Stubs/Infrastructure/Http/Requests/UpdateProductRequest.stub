@@ -1,0 +1,26 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+final class Update{{module}}Request extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'nombre' => 'sometimes|string|min:2',
+            'descripcion' => 'nullable|string',
+            'precio' => 'sometimes|numeric|min:0',
+            'stock' => 'sometimes|integer|min:0',
+            'sku' => 'sometimes|string|min:3',
+            'categoria_id' => 'sometimes|integer|exists:categorias,id',
+            'estado' => 'sometimes|string|in:activo,inactivo',
+        ];
+    }
+}

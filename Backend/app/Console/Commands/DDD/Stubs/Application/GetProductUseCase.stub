@@ -1,0 +1,23 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Application;
+
+use Src\{{context}}\{{module}}\Domain\Contracts\{{module}}RepositoryInterface;
+use Src\{{context}}\{{module}}\Domain\Entities\{{module}};
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Id;
+
+final class Get{{module}}UseCase
+{
+    public function __construct(private {{module}}RepositoryInterface $repository)
+    {
+    }
+
+    public function execute(int $id): ?{{module}}
+    {
+        // 1. Convertimos el int a {{module}}Id (aquí se valida que sea > 0)
+        ${{module}}Id = {{module}}Id::from($id);
+
+        // 2. El repositorio ahora recibe el objeto {{module}}Id
+        return $this->repository->findById(${{module}}Id);
+    }
+}

@@ -1,0 +1,48 @@
+<?php
+
+namespace Src\{{context}}\{{module}}\Infrastructure\Persistence\Eloquent\Repositories;
+
+use Src\{{context}}\{{module}}\Domain\Contracts\{{module}}RepositoryInterface;
+use Src\{{context}}\{{module}}\Infrastructure\Persistence\Eloquent\Models\{{module}}Model;
+use Src\{{context}}\{{module}}\Infrastructure\Persistence\Eloquent\Mappers\{{module}}Mapper;
+use Src\{{context}}\{{module}}\Domain\Entities\{{module}};
+use Src\{{context}}\{{module}}\Domain\ValueObjects\{{module}}Id;
+
+final class {{module}}Repository implements {{module}}RepositoryInterface
+{
+    public function save({{module}} ${{module}}): void
+    {
+        $model = {{module}}Model::create({{module}}Mapper::toEloquent(${{module}}));
+        ${{module}}->setId($model->id);
+    }
+
+    public function findById({{module}}Id $id): ?{{module}}
+    {
+        $model = {{module}}Model::find($id->value());
+
+        return $model
+            ? {{module}}Mapper::toDomain($model)
+            : null;
+    }
+
+    public function findAll(array $filters = []): array
+    {
+        return {{module}}Model::where($filters)
+            ->get()
+            ->map(fn({{module}}Model $model) => {{module}}Mapper::toDomain($model))
+            ->toArray();
+    }
+
+    public function update({{module}} ${{module}}): void
+    {
+        $model = {{module}}Model::find(${{module}}->id());
+        if ($model) {
+            $model->update({{module}}Mapper::toEloquent(${{module}}));
+        }
+    }
+
+    public function delete({{module}}Id $id): void
+    {
+        {{module}}Model::destroy($id->value());
+    }
+}
