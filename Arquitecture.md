@@ -25,6 +25,7 @@ php artisan make:ddd {context} {modul}
 
 - Dentro de src/ se encuentra la arquitectura hexagonal. Ejemplo: src/lms/course
 
+```
 ├── app/                    # Framework (mínimo)
 ├── bootstrap/              # Providers
 │   └── providers.php       
@@ -41,7 +42,7 @@ php artisan make:ddd {context} {modul}
 │   ├── billing/
 │   └── auth/
 └── tests/
-
+```
 
 - Cada subcarpeta:
  * Tiene reglas propias
@@ -55,6 +56,7 @@ php artisan make:ddd {context} {modul}
 
 
 ## 🔵 Domain Layer (Core)
+```
 Domain/
 ├── Contracts/         # Contratos (interfaces)
 ├── Aggregates/        # Agregados raíz (Course, Student)
@@ -64,7 +66,7 @@ Domain/
 ├── Services/          # Servicios de dominio
 ├── Events/            # Eventos de dominio
 └── Exceptions/        # Excepciones del dominio
-
+```
 Uso de cada carpeta
 
 * Contracts/ Contiene los contratos (interfaces).
@@ -79,7 +81,7 @@ Uso de cada carpeta
 ⚠️ Esta capa no conoce Laravel.
 
 ## 🟡 Application Layer (Use Cases)
-
+```
 application/
 ├── Contracts/                               # Contratos (interfaces)
 ├── Commands/                                # Comandos
@@ -94,7 +96,7 @@ application/
 │   ├── GetAll{NameModule}UseCase.php
 │   ├── Get{NameModule}UseCase.php
 │   └── Delete{NameModule}UseCase.php
-
+```
 
 Responsabilidad:
 
@@ -113,7 +115,7 @@ Qué NO debe contener:
 - Este sera la estructura de carpetas para la parte de Adapters. Por defecto Se utilizara Eloquent, las demas excluirlas.
 - Si se especifica Redis se utilizara la carpeta de Cache, Se agrega en Providers el servicio de Cache, sino excluirla.
 - Si se especifica RabbitMQ se utilizara la carpeta de Messaging, Se agrega en Providers el servicio de Messaging, sino excluirla.
-
+```
 Infrastructure/
 ├── Http/
 │   ├── Controllers/                                    # Controladores de la API
@@ -169,10 +171,10 @@ Infrastructure/
 │   ├── RepositoryServiceProvider.php                  # Enlace a Redis
 │   ├── MessagingServiceProvider.php                   # Enlace a RabbitMQ
 │   ├── PersistenceServiceProvider.php                 # Escuchas de la base de datos actual Eloquent
-
+```
 
 ## 🔁 Flujo completo de ejecución
-
+```
 HTTP Request
    ↓
 Route (Infrastructure)
@@ -192,3 +194,4 @@ Repository Interface (Domain Port)
 Repository Implementation (Infrastructure / Adapter Out)
    ↓
 Persistence (Eloquent / DB)
+```
